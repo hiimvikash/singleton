@@ -74,6 +74,178 @@ interface Game {
 export const games: Game[] = [];
 ```
 
+### **`The Problem in the above approach is that a developer need to access the state variable directly and need to knows the structure of state variable completely to make any changes in the state. Can't we just abstract out and provide functions to the developer to perform any operation on state. ` **
+
+## 2. Slightly better approach : CLASS AND OBJECT BASED 
+
+**The GameManager class has the following methods:**
+- addGame(game: Game): Adds a new game object to the games array.
+- getGames(): Returns the array of games.
+- addMove(gameId: string, move: string): Adds a move to the specified game identified by its gameId.
+- logState(): Logs the current state of the games array to the console.
+```js
+// Gamemanager.ts
+interface Game {
+    id: string;
+    whitePlayer: string;
+    blackPlayer: string;
+    moves: string[];
+}
+
+class GameManager {
+    private games: Game[] = []; 
+    // NO ONE CAN Directly access the variable like this : gameManagerInstance.games.push(...) from outside the class, THIS VARIABLE CAN BE ACCESED INSIDE CLASS ONLY so we will be exposing just the function to use.
+  
+
+    constructor(){
+      this.games = [];
+    }
+
+    public addGame(game: Game) {
+        this.games.push(game);
+    }
+
+    public getGames() {
+        return this.games;
+    }
+
+    public addMove(gameId: string, move: string) {
+        const game = this.games.find(game => game.id === gameId);
+        if (game) {
+            game.moves.push(move);
+        }
+    }
+
+    public logState() {
+        console.log(this.games);
+    }
+}
+
+const gameManagerInstance = new GameManager();
+
+export { gameManagerInstance };
+```
+
+#### `NOT TO DO :` creating separate instances of the GameManager class in every file that needs it. This approach can lead to potential inconsistencies and difficulties in managing the state, as multiple instances of the GameManager class will have their own separate state.
+
+- Now you can use like this.
+
+```js
+// index.ts
+import { gameManagerInstance } from "./GameManager";
+import { startLogger } from "./logger";
+
+startLogger();
+
+setInterval(() => {
+    gameManagerInstance.addGame({
+        id: Math.random().toString(),
+        "whitePlayer": "harkirat",
+        "blackPlayer": "jaskirat",
+        moves: []
+    })
+}, 5000)
+```
+**In this approach, a single instance of the GameManager class is created and exported from GameManager.ts. Other files (logger.ts and index.ts) import and use this shared instance, ensuring a consistent state across the application.**
+
+## 3. Even better Approach : Singleton Pattern
+The "Even Better" approach utilizes the Singleton pattern to completely prevent any developer from creating a new instance of the GameManager class. The Singleton pattern ensures that a **class has only one instance** and provides a global point of access to that instance.
+
+
+- We can make the constructor private : but this will prevent in making even single instance of that class from outside.
+- **Static methods and Static Variable :** 
+  - This are related to class.
+  - shared accross all the instance of class.
+  - static methods can be called directly on the class.
+**Static attributes -**
+In JavaScript, the keyword static is used in classes to declare static methods or static properties. Static methods and properties belong to the class itself, rather than to any specific instance of the class. Here’s a breakdown of what this means
+- **Example of a class with static attributes**
+```js
+class Example {
+    static count = 0;
+
+    constructor() {
+        Example.count++;  // Increment the static property using the class name
+    }
+}
+
+let ex1 = new Example();
+let ex2 = new Example();
+console.log(Example.count);  // Outputs: 2
+```
+## Final Singleton Code
+
+```js
+interface Game {
+    id: string;
+    whitePlayer: string;
+    blackPlayer: string;
+    moves: string[];
+}
+
+export class GameManager {
+    private static instance: GameManager; // Create a static instance of the class
+    private games: Game[] = [];
+
+    private constructor() {
+        // Private constructor ensures that a new instance cannot be created from outside
+        this.games = [];
+    }
+
+    public static getInstance(): GameManager {
+        if (!GameManager.instance) {
+            GameManager.instance = new GameManager();
+        }
+        return GameManager.instance;
+    }
+
+    public addGame(game: Game) {
+        this.games.push(game);
+    }
+
+    public getGames() {
+        return this.games;
+    }
+
+    public addMove(gameId: string, move: string) {
+        const game = this.games.find(game => game.id === gameId);
+        if (game) {
+            game.moves.push(move);
+        }
+    }
+
+    public logState() {
+        console.log(this.games);
+    }
+}
+```
+- logger.ts
+```js
+import { GameManager } from "./GameManager";
+
+export function startLogger() {
+    setInterval(() => {
+        GameManager.getInstance().logState();
+    }, 4000)
+}
+```
+
+- index.ts
+```js
+import { GameManager } from "./GameManager";
+import { startLogger } from "./logger";
+
+startLogger();
+
+setInterval(() => {
+    GameManager.getInstance().addGame({
+        id: Math.random().toString(),
+        "whitePlayer": "harkirat",
+        "blackPlayer": "jaskirat",
+        moves: []
+    })
+}, 5000)
+```
 
 
 
