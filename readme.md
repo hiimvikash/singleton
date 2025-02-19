@@ -26,5 +26,9 @@ In cases where the server holds state, there is a need for stickiness. Stickines
 - If by any reason a player refreshes the game or something then stickiness ensures it should make him join the same server, as it will be having in memory state of *room1* storing the moves played till now(this will help in restoring the game).
 ![image](https://github.com/user-attachments/assets/caac5fb0-3971-44b8-aa25-cbf2ff257813)
 
+# 3. How to do STATE MANAGEMENT IN BACKEND.
+## First Principle : export simple object. 
+
+
 
 
