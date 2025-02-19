@@ -32,7 +32,7 @@ In cases where the server holds state, there is a need for stickiness. Stickines
 ![image](https://github.com/user-attachments/assets/caac5fb0-3971-44b8-aa25-cbf2ff257813)
 
 # 3. How to do STATE MANAGEMENT IN BACKEND.
-## First Principle (ugly way) : export simple object and keep on updating according to the moves.
+## 1. First Principle (ugly way) : export simple object and keep on updating according to the moves.
 ![image](https://github.com/user-attachments/assets/7be9bfb7-7b44-4c51-b8b2-76df9972d28b)
 
 ![image](https://github.com/user-attachments/assets/7a093835-cba5-412b-8f1d-2b52763dbdfb)
