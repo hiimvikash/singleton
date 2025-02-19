@@ -20,7 +20,7 @@ Example:-
     - You are playing chess and **you made a move `e4 e5`**, to validate this move you will **fetch the last board moves configuration** from server > **validate the made move** > then **store to server.**
     - This process will leads to lots of latency.
 
-  ## Stickiness
+## Stickiness
 In cases where the server holds state, there is a need for stickiness. Stickiness ensures that the user who is interested in a specific room or game state gets connected to the specific server that holds the relevant state.
 - If two players are playing chess, they must connect to same server.
 - If by any reason a player refreshes the game or something then stickiness ensures it should make him join the same server, as it will be having in memory state of *room1* storing the moves played till now(this will help in restoring the game).
